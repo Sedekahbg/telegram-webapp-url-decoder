@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Query Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4a90e2, #50e3c2);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .background-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+            user-select: none;
+            pointer-events: none;
+            text-align: center;
+        }
+        .container {
+            position: relative;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        #urlInput {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            word-wrap: break-word;
+            min-height: 40px;
+        }
+        .copy-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-text">URL Decoder</div>
+    <div class="container">
+        <h1>URL Query Decoder</h1>
+        <input type="text" id="urlInput" placeholder="Paste your query here" />
+        <button onclick="decodeQuery()">Decode</button>
+        <div id="output"></div>
+        <button class="copy-button" onclick="copyToClipboard()" style="display: none;">Copy Query</button>
+    </div>
+
+    <script>
+        function decodeQuery() {
+            const query = document.getElementById('urlInput').value.trim();
+            const queryString = query.includes('?') ? query.split('?')[1] : query;
+            const decodedQuery = decodeURIComponent(queryString);
+
+            // Regex untuk mencari parameter
+            const query_id = decodedQuery.match(/query_id=([^&]*)/)?.[1] || '';
+            const user = decodedQuery.match(/user=([^&]*)/)?.[1] || '';
+            const auth_date = decodedQuery.match(/auth_date=([^&]*)/)?.[1] || '';
+            const hash = decodedQuery.match(/hash=([^&]*)/)?.[1] || '';
+
+            const decodedUser = user ? decodeURIComponent(user) : '';
+
+            // Membuat output untuk bagian query yang diperlukan
+            let output = '';
+            if (query_id) output += `query_id=${query_id}&`;
+            if (decodedUser) output += `user=${decodedUser}&`;
+            if (auth_date) output += `auth_date=${auth_date}&`;
+            if (hash) output += `hash=${hash}`;
+
+            output = output.endsWith('&') ? output.slice(0, -1) : output;
+
+            document.getElementById('output').textContent = output;
+            document.querySelector('.copy-button').style.display = 'block';
+        }
+
+        function copyToClipboard() {
+            const tempElement = document.createElement('textarea');
+            tempElement.value = document.getElementById('output').textContent;
+            document.body.appendChild(tempElement);
+            tempElement.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempElement);
+            alert('Query copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
+
