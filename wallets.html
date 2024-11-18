@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Remove Numbers and Dots</title>
+</head>
+<body>
+    <h1>Remove Numbers and Dots</h1>
+    <form>
+        <label for="inputText">Masukkan kata-kata:</label><br>
+        <textarea id="inputText" rows="4" cols="50"></textarea><br><br>
+        <input type="button" value="Hapus Angka dan Titik" onclick="removeNumbersAndDots()">
+    </form>
+
+    <h2>Hasil:</h2>
+    <p id="resultText"></p>
+
+    <button onclick="copyResult()">Salin Hasil</button>
+
+    <script>
+        function removeNumbersAndDots() {
+            var inputText = document.getElementById("inputText").value;
+            var resultText = inputText.replace(/[0-9.]/g, '');
+            document.getElementById("resultText").textContent = resultText;
+        }
+
+        function copyResult() {
+            var resultText = document.getElementById("resultText").textContent;
+            var textArea = document.createElement("textarea");
+            textArea.value = resultText.replace(/\n/g, ' ').trim(); // Menggabungkan teks dalam satu baris tanpa spasi
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("Copy");
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
